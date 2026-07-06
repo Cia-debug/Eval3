@@ -671,3 +671,151 @@ pre {
     flex-direction: column;
   }
 }
+
+/* Génération salaires en masse */
+.bulk-salary-page {
+  max-width: 640px;
+}
+
+.bulk-salary-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.bulk-salary-header h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  letter-spacing: 0.02em;
+}
+
+.bulk-salary-block {
+  margin: 1.25rem 0;
+}
+
+.bulk-salary-block-title {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.bulk-salary-divider {
+  border: none;
+  border-top: 1px solid #d1d5db;
+  margin: 1.5rem 0;
+}
+
+.bulk-salary-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bulk-salary-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.bulk-salary-field label,
+.bulk-salary-field-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.bulk-salary-field input,
+.bulk-salary-field select {
+  width: 100%;
+}
+
+.bulk-salary-hours-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.bulk-salary-hours-row label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.bulk-salary-filter-action button {
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.bulk-salary-hint {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.bulk-salary-select-all {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.bulk-salary-employees {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.bulk-salary-employees li + li {
+  border-top: 1px solid #f3f4f6;
+}
+
+.bulk-salary-employee-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.85rem;
+  cursor: pointer;
+}
+
+.bulk-salary-employee-item:hover {
+  background: #f9fafb;
+}
+
+.bulk-salary-employee-item input {
+  width: auto;
+  margin: 0;
+}
+
+.bulk-salary-salary-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bulk-salary-submit {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.bulk-salary-submit button {
+  min-width: 220px;
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
+}
+
+.bulk-salary-results {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}

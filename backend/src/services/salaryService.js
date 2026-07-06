@@ -312,15 +312,23 @@ export async function generateBulkSalaries(body) {
     return { ok: false, errors: parsed.errors };
   }
 
-  const employees = await searchEmployees({
-    poste: body.poste,
-    genre: body.genre,
-    heure_min: body.heure_min,
-    heure_max: body.heure_max,
-  });
+  let employees;
+
+  if (Array.isArray(body.employee_ids) && body.employee_ids.length > 0) {
+    const allEmployees = await searchEmployees({});
+    const idSet = new Set(body.employee_ids.map(String));
+    employees = allEmployees.filter((employee) => idSet.has(employee.id));
+  } else {
+    employees = await searchEmployees({
+      poste: body.poste,
+      genre: body.genre,
+      heure_min: body.heure_min,
+      heure_max: body.heure_max,
+    });
+  }
 
   if (employees.length === 0) {
-    return { ok: false, errors: ['Aucun salarié ne correspond aux filtres'] };
+    return { ok: false, errors: ['Aucun salarié sélectionné'] };
   }
 
   const refs = await allocateSalaryRefs(employees.length);
