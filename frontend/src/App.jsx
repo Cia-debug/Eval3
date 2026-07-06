@@ -16,6 +16,7 @@ import ImportImagesPage from './pages/ImportImagesPage';
 import HolidaysPage from './pages/HolidaysPage';
 import SalaryCreatePage from './pages/SalaryCreatePage';
 import BulkSalaryPage from './pages/BulkSalaryPage';
+import BulkMonthlySalaryPage from './pages/BulkMonthlySalaryPage';
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="/frontoffice/salaries" element={<Navigate to="/frontoffice/salaries/liste" replace />} />
             <Route path="/frontoffice/salaires/nouveau" element={<SalaryCreatePage />} />
             <Route path="/frontoffice/salaires/generer" element={<BulkSalaryPage />} />
+            <Route path="/frontoffice/salaires/generer-mois" element={<BulkMonthlySalaryPage />} />
           </Route>
 
           <Route element={<ProtectedBackofficeRoute />}>

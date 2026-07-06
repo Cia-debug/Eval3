@@ -1,38 +1,44 @@
 import { useState } from 'react';
-import { generateBulkSalaries } from '../api/client';
+import { generateMonthlyBulkSalaries } from '../api/client';
 import BulkEmployeeSelection from '../components/BulkEmployeeSelection';
 import BulkSalaryResults from '../components/BulkSalaryResults';
 import { useBulkEmployeeSelection } from '../hooks/useBulkEmployeeSelection';
 
-function firstDayOfMonthFr() {
-  const now = new Date();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  return `01/${month}/${now.getFullYear()}`;
-}
+const MONTHS = [
+  { value: 1, label: 'Janvier' },
+  { value: 2, label: 'Février' },
+  { value: 3, label: 'Mars' },
+  { value: 4, label: 'Avril' },
+  { value: 5, label: 'Mai' },
+  { value: 6, label: 'Juin' },
+  { value: 7, label: 'Juillet' },
+  { value: 8, label: 'Août' },
+  { value: 9, label: 'Septembre' },
+  { value: 10, label: 'Octobre' },
+  { value: 11, label: 'Novembre' },
+  { value: 12, label: 'Décembre' },
+];
 
-function lastDayOfMonthFr() {
-  const now = new Date();
-  const last = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-  const day = String(last.getDate()).padStart(2, '0');
-  const month = String(last.getMonth() + 1).padStart(2, '0');
-  return `${day}/${month}/${last.getFullYear()}`;
-}
+const currentDate = new Date();
 
-export default function BulkSalaryPage() {
+export default function BulkMonthlySalaryPage() {
   const selection = useBulkEmployeeSelection();
-  const [salaryForm, setSalaryForm] = useState({
-    date_start: firstDayOfMonthFr(),
-    date_end: lastDayOfMonthFr(),
-    amount: '',
+  const [form, setForm] = useState({
+    month: currentDate.getMonth() + 1,
+    year: currentDate.getFullYear(),
+    salary_per_day: '',
   });
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [result, setResult] = useState(null);
 
-  function handleSalaryChange(event) {
+  function handleFormChange(event) {
     const { name, value } = event.target;
-    setSalaryForm((current) => ({ ...current, [name]: value }));
+    setForm((current) => ({
+      ...current,
+      [name]: name === 'month' || name === 'year' ? Number(value) : value,
+    }));
   }
 
   async function handleGenerate(event) {
@@ -55,8 +61,10 @@ export default function BulkSalaryPage() {
     selection.resetSelectionState();
 
     try {
-      const data = await generateBulkSalaries({
-        ...salaryForm,
+      const data = await generateMonthlyBulkSalaries({
+        month: form.month,
+        year: form.year,
+        salary_per_day: form.salary_per_day,
         employee_ids: [...selection.selectedIds],
       });
 
@@ -72,11 +80,14 @@ export default function BulkSalaryPage() {
   return (
     <div className="page-content page-content--narrow bulk-salary-page">
       <header className="bulk-salary-header">
-        <h2>Génération de salaires</h2>
+        <h2>Génération de salaires en masse</h2>
+        <p className="muted bulk-salary-subtitle">
+          Calcul automatique selon le mois, les jours fériés et les périodes déjà payées.
+        </p>
       </header>
 
       <BulkEmployeeSelection
-        idPrefix="classic"
+        idPrefix="monthly"
         filters={selection.filters}
         jobOptions={selection.jobOptions}
         employees={selection.employees}
@@ -95,48 +106,53 @@ export default function BulkSalaryPage() {
         <form onSubmit={handleGenerate} className="bulk-salary-salary-form">
           <div className="bulk-salary-salary-grid">
             <div className="bulk-salary-field">
-              <label htmlFor="date_start">Date début</label>
+              <label htmlFor="month">Mois</label>
+              <select id="month" name="month" value={form.month} onChange={handleFormChange} required>
+                {MONTHS.map((month) => (
+                  <option key={month.value} value={month.value}>
+                    {month.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="bulk-salary-field">
+              <label htmlFor="year">Année</label>
               <input
-                id="date_start"
-                name="date_start"
-                type="text"
-                value={salaryForm.date_start}
-                onChange={handleSalaryChange}
-                placeholder="JJ/MM/AAAA"
+                id="year"
+                name="year"
+                type="number"
+                min="2000"
+                max="2100"
+                value={form.year}
+                onChange={handleFormChange}
                 required
               />
             </div>
+
             <div className="bulk-salary-field">
-              <label htmlFor="date_end">Date fin</label>
+              <label htmlFor="salary_per_day">Salaire par jour</label>
               <input
-                id="date_end"
-                name="date_end"
-                type="text"
-                value={salaryForm.date_end}
-                onChange={handleSalaryChange}
-                placeholder="JJ/MM/AAAA"
-                required
-              />
-            </div>
-            <div className="bulk-salary-field">
-              <label htmlFor="amount">Montant</label>
-              <input
-                id="amount"
-                name="amount"
+                id="salary_per_day"
+                name="salary_per_day"
                 type="number"
                 min="0"
-                step="1"
-                value={salaryForm.amount}
-                onChange={handleSalaryChange}
-                placeholder="900000"
+                step="0.01"
+                value={form.salary_per_day}
+                onChange={handleFormChange}
+                placeholder="10"
                 required
               />
             </div>
           </div>
 
+          <p className="muted bulk-salary-hint bulk-salary-formula">
+            Formule : (jours non payés × salaire/jour) + (jours fériés non payés × salaire/jour).
+          </p>
+
           <div className="bulk-salary-submit">
             <button type="submit" disabled={generating || selection.selectedCount === 0}>
-              {generating ? 'Génération…' : 'Générer les salaires'}
+              {generating ? 'Génération…' : 'Générer'}
             </button>
           </div>
         </form>

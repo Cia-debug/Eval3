@@ -5,6 +5,7 @@ const links = [
   { to: '/frontoffice/salaries/recherche', label: 'Recherche' },
   { to: '/frontoffice/salaires/nouveau', label: 'Nouveau salaire' },
   { to: '/frontoffice/salaires/generer', label: 'Génération en masse' },
+  { to: '/frontoffice/salaires/generer-mois', label: 'Génération mensuelle' },
 ];
 
 function isLinkActive(pathname, link) {

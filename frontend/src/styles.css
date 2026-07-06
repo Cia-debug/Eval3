@@ -690,6 +690,22 @@ pre {
   letter-spacing: 0.02em;
 }
 
+.bulk-salary-subtitle {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+}
+
+.bulk-salary-formula {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+}
+
+.muted-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: #6b7280;
+}
+
 .bulk-salary-block {
   margin: 1.25rem 0;
 }

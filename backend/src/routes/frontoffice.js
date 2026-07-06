@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { searchEmployees } from '../services/employeeService.js';
 import { getEmployeeSalaryHistory } from '../services/employeeSalaryHistoryService.js';
 import { createSalaryOnly, generateBulkSalaries, paySalary } from '../services/salaryService.js';
+import { generateMonthlyBulkSalaries } from '../services/monthlyBulkSalaryService.js';
 
 const router = Router();
 
@@ -51,6 +52,29 @@ router.post('/salaries/bulk', async (req, res) => {
     res.status(201).json({
       ok: result.ok,
       message: `${result.created} salaire(s) généré(s) sur ${result.total}`,
+      ...result,
+    });
+  } catch (error) {
+    res.status(502).json({ error: error.message });
+  }
+});
+
+router.post('/salaries/bulk-monthly', async (req, res) => {
+  try {
+    const result = await generateMonthlyBulkSalaries(req.body ?? {});
+
+    if (result.errors) {
+      return res.status(400).json({ error: result.errors.join(' ; ') });
+    }
+
+    const parts = [`${result.created} salaire(s) généré(s) sur ${result.total}`];
+    if (result.skipped > 0) {
+      parts.push(`${result.skipped} ignoré(s) (mois déjà couvert)`);
+    }
+
+    res.status(201).json({
+      ok: result.ok,
+      message: parts.join(' — '),
       ...result,
     });
   } catch (error) {

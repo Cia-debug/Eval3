@@ -71,6 +71,22 @@ export function listHolidays() {
   return rows.map(mapRow);
 }
 
+export function listHolidaysInMonth(year, month) {
+  const monthNumber = Number(month);
+  const yearNumber = Number(year);
+
+  if (!Number.isFinite(monthNumber) || monthNumber < 1 || monthNumber > 12) {
+    return [];
+  }
+
+  if (!Number.isFinite(yearNumber) || yearNumber < 1) {
+    return [];
+  }
+
+  const prefix = `${yearNumber}-${String(monthNumber).padStart(2, '0')}-`;
+  return listHolidays().filter((holiday) => holiday.date.startsWith(prefix));
+}
+
 export function getHolidayById(id) {
   getSqliteDb();
   const row = sqliteGet(`
