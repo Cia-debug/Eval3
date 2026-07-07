@@ -155,6 +155,14 @@ export function generateMonthlyBulkSalaries(payload) {
   });
 }
 
+export function generateMonthlyBulkPayments(payload) {
+  return apiFetch('/api/frontoffice/payments/bulk-monthly', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+
 export function createSalary(payload) {
   return apiFetch('/api/frontoffice/salaries', {
     method: 'POST',

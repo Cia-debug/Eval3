@@ -3,6 +3,7 @@ import { searchEmployees } from '../services/employeeService.js';
 import { getEmployeeSalaryHistory } from '../services/employeeSalaryHistoryService.js';
 import { createSalaryOnly, generateBulkSalaries, paySalary } from '../services/salaryService.js';
 import { generateMonthlyBulkSalaries } from '../services/monthlyBulkSalaryService.js';
+import { generateMonthlyBulkPayment } from '../services/monthlyBulkPaymentService.js';
 
 const router = Router();
 
@@ -75,6 +76,25 @@ router.post('/salaries/bulk-monthly', async (req, res) => {
     res.status(201).json({
       ok: result.ok,
       message: parts.join(' — '),
+      ...result,
+    });
+  } catch (error) {
+    res.status(502).json({ error: error.message });
+  }
+});
+
+router.post('/payments/bulk-monthly', async (req, res) => {
+  try {
+    const result = await generateMonthlyBulkPayment(req.body ?? {});
+
+    if (result.errors) {
+      return res.status(400).json({ error: result.errors.join(' ; ') });
+    }
+
+    res.status(201).json({
+      ok: result.ok,
+      message: result.warning
+        || `${result.created} paiement(s) généré(s) — total ${result.total_paid} € — reste ${result.budget_remaining} €`,
       ...result,
     });
   } catch (error) {

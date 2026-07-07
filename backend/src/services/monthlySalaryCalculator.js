@@ -41,7 +41,7 @@ function eachDayInRange(startIso, endIso) {
     days.push(`${year}-${month}-${day}`);
     cursor.setDate(cursor.getDate() + 1);
   }
-
+ 
   return days;
 }
 
@@ -53,10 +53,6 @@ export function getMonthBounds(year, month) {
   };
 }
 
-/**
- * Retourne l'ensemble des dates ISO (YYYY-MM-DD) déjà couvertes par des salaires existants
- * pour le mois donné.
- */
 export function getPaidDaysInMonth(salaries, year, month) {
   const { start: monthStart, end: monthEnd } = getMonthBounds(year, month);
   const paidDays = new Set();
@@ -84,11 +80,6 @@ export function getPaidDaysInMonth(salaries, year, month) {
   return paidDays;
 }
 
-/**
- * Calcule le montant du salaire mensuel :
- * - chaque jour non payé : salaireParJour
- * - chaque jour férié non payé : + salaireParJour (paiement double)
- */
 export function calculateMonthlySalaryAmount({
   year,
   month,
