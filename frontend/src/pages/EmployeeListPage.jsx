@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { searchEmployees } from '../api/client';
-import { formatWeeklyHours } from '../utils/formatWeeklyHours';
+import TableauEmployes from '../components/TableauEmployes';
 
 const EMPTY_FILTERS = {
   ref_employee: '',
@@ -87,117 +87,79 @@ export default function EmployeeListPage() {
         </Link>
       </div>
 
-        <form className="search-form" onSubmit={handleSubmit}>
-          <div className="search-grid">
-            <div>
-              <label htmlFor="ref_employee">Ref employé</label>
-              <input
-                id="ref_employee"
-                name="ref_employee"
-                value={filters.ref_employee}
-                onChange={handleChange}
-                placeholder="1"
-              />
-            </div>
-            <div>
-              <label htmlFor="nom">Nom</label>
-              <input
-                id="nom"
-                name="nom"
-                value={filters.nom}
-                onChange={handleChange}
-                placeholder="Rakotobe"
-              />
-            </div>
-            <div>
-              <label htmlFor="login">Identifiant</label>
-              <input
-                id="login"
-                name="login"
-                value={filters.login}
-                onChange={handleChange}
-                placeholder="rakoto1"
-              />
-            </div>
-            <div>
-              <label htmlFor="genre">Genre</label>
-              <select id="genre" name="genre" value={filters.genre} onChange={handleChange}>
-                <option value="">Tous</option>
-                <option value="homme">Homme</option>
-                <option value="femme">Femme</option>
-              </select>
-            </div>
-            <div>
-              <label htmlFor="poste">Poste</label>
-              <input
-                id="poste"
-                name="poste"
-                value={filters.poste}
-                onChange={handleChange}
-                placeholder="Comptable"
-              />
-            </div>
+      <form className="search-form" onSubmit={handleSubmit}>
+        <div className="search-grid">
+          <div>
+            <label htmlFor="ref_employee">Ref employé</label>
+            <input
+              id="ref_employee"
+              name="ref_employee"
+              value={filters.ref_employee}
+              onChange={handleChange}
+              placeholder="1"
+            />
           </div>
-
-          <div className="form-actions">
-            <button type="submit">Rechercher</button>
-            <button type="button" className="btn-secondary" onClick={handleReset}>
-              Réinitialiser
-            </button>
+          <div>
+            <label htmlFor="nom">Nom</label>
+            <input
+              id="nom"
+              name="nom"
+              value={filters.nom}
+              onChange={handleChange}
+              placeholder="Rakotobe"
+            />
           </div>
-        </form>
+          <div>
+            <label htmlFor="login">Identifiant</label>
+            <input
+              id="login"
+              name="login"
+              value={filters.login}
+              onChange={handleChange}
+              placeholder="rakoto1"
+            />
+          </div>
+          <div>
+            <label htmlFor="genre">Genre</label>
+            <select id="genre" name="genre" value={filters.genre} onChange={handleChange}>
+              <option value="">Tous</option>
+              <option value="homme">Homme</option>
+              <option value="femme">Femme</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="poste">Poste</label>
+            <input
+              id="poste"
+              name="poste"
+              value={filters.poste}
+              onChange={handleChange}
+              placeholder="Comptable"
+            />
+          </div>
+        </div>
 
-        {error ? <p className="error">{error}</p> : null}
-        {loading ? <p>Chargement…</p> : null}
+        <div className="form-actions">
+          <button type="submit">Rechercher</button>
+          <button type="button" className="btn-secondary" onClick={handleReset}>
+            Réinitialiser
+          </button>
+        </div>
+      </form>
 
-        {!loading && !error ? (
-          <>
-            <p className="muted result-count">{employees.length} salarié(s) trouvé(s)</p>
-            <div className="table-wrap">
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Ref</th>
-                    <th>Nom</th>
-                    <th>Identifiant</th>
-                    <th>Genre</th>
-                    <th>Poste</th>
-                    <th>Heures/sem.</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {employees.length === 0 ? (
-                    <tr>
-                      <td colSpan="7" className="empty-cell">
-                        Aucun salarié ne correspond aux critères.
-                      </td>
-                    </tr>
-                  ) : (
-                    employees.map((employee) => (
-                      <tr key={employee.id}>
-                        <td>{employee.ref_employee}</td>
-                        <td>{employee.lastname}</td>
-                        <td>{employee.login}</td>
-                        <td>{employee.gender_label || '—'}</td>
-                        <td>{employee.job || '—'}</td>
-                        <td>{formatWeeklyHours(employee.weeklyhours)}</td>
-                        <td>
-                          <Link
-                            to={`/frontoffice/salaires/nouveau?employeeId=${employee.id}`}
-                            className="table-link"
-                          >
-                            Salaire
-                          </Link>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </>
-        ) : null}
+      {error ? <p className="error">{error}</p> : null}
+      {loading ? <p>Chargement…</p> : null}
+
+      {!loading && !error ? (
+        <>
+          <p className="muted result-count">{employees.length} salarié(s) trouvé(s)</p>
+          <TableauEmployes
+            employees={employees}
+            showSalaryAction
+            emptyMessage="Aucun salarié ne correspond aux critères."
+          />
+        </>
+      ) : null}
     </div>
   );
 }

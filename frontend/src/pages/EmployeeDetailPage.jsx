@@ -1,24 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getEmployeeSalaryHistory } from '../api/client';
+import { formatDateFr, formatMontantEuro } from '../utils/formatters';
 import { formatWeeklyHours } from '../utils/formatWeeklyHours';
-
-function formatAmount(value) {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR',
-    maximumFractionDigits: 2,
-  }).format(value);
-}
-
-function formatDateLabel(isoDate) {
-  if (!isoDate) {
-    return '—';
-  }
-
-  const [year, month, day] = isoDate.split('-');
-  return `${day}/${month}/${year}`;
-}
 
 export default function EmployeeDetailPage() {
   const { id } = useParams();
@@ -92,13 +76,13 @@ export default function EmployeeDetailPage() {
                         <div>
                           <strong>{salary.label}</strong>
                           <p className="muted">
-                            Ref {salary.ref} · {formatDateLabel(salary.date_start)} → {formatDateLabel(salary.date_end)}
+                            Ref {salary.ref} · {formatDateFr(salary.date_start)} → {formatDateFr(salary.date_end)}
                           </p>
                         </div>
                         <div className="salary-amounts">
-                          <span>Montant : {formatAmount(salary.amount)}</span>
+                          <span>Montant : {formatMontantEuro(salary.amount)}</span>
                           <span className={salary.remaining > 0 ? 'remaining-due' : 'remaining-paid'}>
-                            Reste à payer : {formatAmount(salary.remaining)}
+                            Reste à payer : {formatMontantEuro(salary.remaining)}
                           </span>
                         </div>
                       </div>
@@ -115,8 +99,8 @@ export default function EmployeeDetailPage() {
                             <tbody>
                               {salary.payments.map((payment) => (
                                 <tr key={payment.id}>
-                                  <td>{formatDateLabel(payment.date)}</td>
-                                  <td>{formatAmount(payment.amount)}</td>
+                                  <td>{formatDateFr(payment.date)}</td>
+                                  <td>{formatMontantEuro(payment.amount)}</td>
                                 </tr>
                               ))}
                             </tbody>
@@ -135,15 +119,15 @@ export default function EmployeeDetailPage() {
               <section className="dashboard-summary">
                 <div className="summary-item">
                   <span className="summary-label">Total salaires</span>
-                  <strong>{formatAmount(data.totals.amount)}</strong>
+                  <strong>{formatMontantEuro(data.totals.amount)}</strong>
                 </div>
                 <div className="summary-item">
                   <span className="summary-label">Total payé</span>
-                  <strong>{formatAmount(data.totals.paid)}</strong>
+                  <strong>{formatMontantEuro(data.totals.paid)}</strong>
                 </div>
                 <div className="summary-item">
                   <span className="summary-label">Reste à payer total</span>
-                  <strong>{formatAmount(data.totals.remaining)}</strong>
+                  <strong>{formatMontantEuro(data.totals.remaining)}</strong>
                 </div>
               </section>
             ) : null}

@@ -1,4 +1,5 @@
 import { dateToTimestamp, dolibarr } from './dolibarr.js';
+import { normalizeHeader, parseCsvContent, parseCsvLine } from './csvParser.js';
 
 const COLUMN_ALIASES = {
   ref_salaire: 'ref_salary',
@@ -12,52 +13,6 @@ const COLUMN_ALIASES = {
   paiement: 'payments',
   payments: 'payments',
 };
-
-function normalizeHeader(value) {
-  return value
-    .trim()
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/\s+/g, '_');
-}
-
-function detectDelimiter(line) {
-  const semicolons = (line.match(/;/g) || []).length;
-  const commas = (line.match(/,/g) || []).length;
-  return semicolons > commas ? ';' : ',';
-}
-
-function parseCsvLine(line, delimiter) {
-  const values = [];
-  let current = '';
-  let inQuotes = false;
-
-  for (let i = 0; i < line.length; i += 1) {
-    const char = line[i];
-
-    if (char === '"') {
-      if (inQuotes && line[i + 1] === '"') {
-        current += '"';
-        i += 1;
-      } else {
-        inQuotes = !inQuotes;
-      }
-      continue;
-    }
-
-    if (char === delimiter && !inQuotes) {
-      values.push(current.trim());
-      current = '';
-      continue;
-    }
-
-    current += char;
-  }
-
-  values.push(current.trim());
-  return values;
-}
 
 function parseAmount(value) {
   if (value == null || value === '') {
@@ -108,14 +63,7 @@ export function parsePayments(value) {
 }
 
 export function parseSalaryCsv(content) {
-  const text = content.replace(/^\uFEFF/, '').trim();
-  if (!text) {
-    throw new Error('Fichier CSV vide');
-  }
-
-  const lines = text.split(/\r?\n/).filter((line) => line.trim());
-  const delimiter = detectDelimiter(lines[0]);
-  const rawHeaders = parseCsvLine(lines[0], delimiter);
+  const { lines, delimiter, rawHeaders } = parseCsvContent(content);
 
   const headers = rawHeaders.map((header) => {
     const normalized = normalizeHeader(header);

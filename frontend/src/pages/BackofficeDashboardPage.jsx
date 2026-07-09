@@ -1,13 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getBackofficeDashboard } from '../api/client';
-
-function formatAmount(value) {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR',
-    maximumFractionDigits: 2,
-  }).format(value);
-}
+import { formatMontantEuro } from '../utils/formatters';
 
 function formatMonthLabel(monthKey) {
   const [year, month] = monthKey.split('-');
@@ -45,7 +38,7 @@ function getItemColor(item, colorKey, index) {
   return MONTH_PIE_COLORS[index % MONTH_PIE_COLORS.length];
 }
 
-function PieDiagram({ items, valueKey, labelKey, colorKey, formatValue = formatAmount }) {
+function PieDiagram({ items, valueKey, labelKey, colorKey, formatValue = formatMontantEuro }) {
   const total = items.reduce((sum, item) => sum + item[valueKey], 0) || 1;
   let angle = 0;
   const gradientStops = items
@@ -87,7 +80,7 @@ function PieDiagram({ items, valueKey, labelKey, colorKey, formatValue = formatA
   );
 }
 
-function BarGraph({ items, valueKey, labelKey, colorKey, formatValue = formatAmount }) {
+function BarGraph({ items, valueKey, labelKey, colorKey, formatValue = formatMontantEuro }) {
   const max = Math.max(...items.map((item) => item[valueKey]), 1);
 
   return (
@@ -179,7 +172,7 @@ export default function BackofficeDashboardPage() {
             </div>
             <div className="summary-item">
               <span className="summary-label">Montant total</span>
-              <strong>{formatAmount(stats.totalAmount)}</strong>
+              <strong>{formatMontantEuro(stats.totalAmount)}</strong>
             </div>
             <div className="summary-item summary-item--man">
               <span className="summary-label">Hommes</span>
@@ -216,13 +209,13 @@ export default function BackofficeDashboardPage() {
                   </div>
                 </div>
                 <p className="chart-total">
-                  Total : <strong>{formatAmount(genreTotal)}</strong>
+                  Total : <strong>{formatMontantEuro(genreTotal)}</strong>
                 </p>
                 <StatsTable
                   columns={[
                     { key: 'label', label: 'Genre' },
                     { key: 'count', label: 'Nb salaires' },
-                    { key: 'total', label: 'Montant', render: (row) => formatAmount(row.total) },
+                    { key: 'total', label: 'Montant', render: (row) => formatMontantEuro(row.total) },
                   ]}
                   rows={stats.byGenre.map((item) => ({ ...item, id: item.genre }))}
                 />
@@ -252,13 +245,13 @@ export default function BackofficeDashboardPage() {
                   </div>
                 </div>
                 <p className="chart-total">
-                  Total : <strong>{formatAmount(monthTotal)}</strong>
+                  Total : <strong>{formatMontantEuro(monthTotal)}</strong>
                 </p>
                 <StatsTable
                   columns={[
                     { key: 'month', label: 'Mois', render: (row) => formatMonthLabel(row.month) },
                     { key: 'count', label: 'Nb salaires' },
-                    { key: 'total', label: 'Montant', render: (row) => formatAmount(row.total) },
+                    { key: 'total', label: 'Montant', render: (row) => formatMontantEuro(row.total) },
                   ]}
                   rows={stats.byMonth.map((item) => ({ ...item, id: item.month }))}
                 />

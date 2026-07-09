@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+import { getMysqlConfig } from './mysqlUserFields.js';
 
 /** Tables jamais vidées ni modifiées (config, menus, modules, dictionnaires…) */
 const UNTOUCHABLE_TABLES = new Set([
@@ -27,16 +28,6 @@ const USER_LINKED_TABLES = [...USER_MANAGED_TABLES].filter((t) => t !== 'llx_use
 
 function nowSql() {
   return new Date().toISOString().slice(0, 19).replace('T', ' ');
-}
-
-function getMysqlConfig() {
-  return {
-    host: process.env.MYSQL_HOST || 'localhost',
-    port: Number(process.env.MYSQL_PORT) || 3306,
-    user: process.env.MYSQL_USER || 'root',
-    password: process.env.MYSQL_PASSWORD ?? '',
-    database: process.env.MYSQL_DATABASE || 'dolibarr',
-  };
 }
 
 function shouldPreserveTable(tableName) {

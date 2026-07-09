@@ -2,19 +2,10 @@ import fs from 'fs/promises';
 import path from 'path';
 import AdmZip from 'adm-zip';
 import mysql from 'mysql2/promise';
+import { getMysqlConfig } from './mysqlUserFields.js';
 
 const IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif']);
 const DEFAULT_PHOTOS_PATH = 'C:/xampp/htdocs/dolibarr/documents/users';
-
-function getMysqlConfig() {
-  return {
-    host: process.env.MYSQL_HOST || 'localhost',
-    port: Number(process.env.MYSQL_PORT) || 3306,
-    user: process.env.MYSQL_USER || 'root',
-    password: process.env.MYSQL_PASSWORD ?? '',
-    database: process.env.MYSQL_DATABASE || 'dolibarr',
-  };
-}
 
 export function getUserPhotosPath() {
   const configured = process.env.DOLIBARR_USER_PHOTOS_PATH?.trim()

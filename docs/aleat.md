@@ -25,3 +25,18 @@ Donc total salaire du mois : 30*10 = 300
     -> total reste payement du mois ne doit plus prendre en compte ce payement
 
     Periode efa paye
+
+
+Creation nouvelle page dans FrontOffice:
+    *Reprendre Generer salaire en masse 
+        -Page generer en masse paiement
+        -Modification a appliquer :
+            **au lieu de date , on choisis mois et annee
+            **nouveau champ de saisi pour montant budget
+            **liste deroulante poste prioritaire
+            **bouton generer paiement
+
+    *Regle metier a prendre en compte:
+        -poste prioritaire
+        -ce sont qui sont dans le mois et annee 
+        -date anteieure du mois si meme poste

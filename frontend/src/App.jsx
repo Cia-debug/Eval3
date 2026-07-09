@@ -14,10 +14,10 @@ import ImportEmployeesPage from './pages/ImportEmployeesPage';
 import ImportSalariesPage from './pages/ImportSalariesPage';
 import ImportImagesPage from './pages/ImportImagesPage';
 import HolidaysPage from './pages/HolidaysPage';
-import SalaryCreatePage from './pages/SalaryCreatePage';
-import BulkSalaryPage from './pages/BulkSalaryPage';
-import BulkMonthlySalaryPage from './pages/BulkMonthlySalaryPage';
-import BulkMonthlyPaymentPage from './pages/BulkMonthlyPaymentPage';
+import PageCreationSalaire from './pages/PageCreationSalaire';
+import PageSalairesMasse from './pages/PageSalairesMasse';
+import PageGenerationSalairesMensuels from './pages/PageGenerationSalairesMensuels';
+import PagePaiementsMensuelsMasse from './pages/PagePaiementsMensuelsMasse';
 
 export default function App() {
   return (
@@ -32,10 +32,10 @@ export default function App() {
             <Route path="/frontoffice/salaries/recherche" element={<EmployeeListPage />} />
             <Route path="/frontoffice/salaries/:id" element={<EmployeeDetailPage />} />
             <Route path="/frontoffice/salaries" element={<Navigate to="/frontoffice/salaries/liste" replace />} />
-            <Route path="/frontoffice/salaires/nouveau" element={<SalaryCreatePage />} />
-            <Route path="/frontoffice/salaires/generer" element={<BulkSalaryPage />} />
-            <Route path="/frontoffice/salaires/generer-mois" element={<BulkMonthlySalaryPage />} />
-            <Route path="/frontoffice/salaires/paiement-mois" element={<BulkMonthlyPaymentPage />} />
+            <Route path="/frontoffice/salaires/nouveau" element={<PageCreationSalaire />} />
+            <Route path="/frontoffice/salaires/generer" element={<PageSalairesMasse />} />
+            <Route path="/frontoffice/salaires/generer-mois" element={<PageGenerationSalairesMensuels />} />
+            <Route path="/frontoffice/salaires/paiement-mois" element={<PagePaiementsMensuelsMasse />} />
           </Route>
 
           <Route element={<ProtectedBackofficeRoute />}>

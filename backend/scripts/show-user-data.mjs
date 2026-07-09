@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import mysql from 'mysql2/promise';
-import { generateMonthlyBulkPayment } from '../src/services/monthlyBulkPaymentService.js';
+import { genererPaiementsMensuelsEnMasse } from '../src/services/servicePaiementsMensuelsMasse.js';
 
 const c = await mysql.createConnection({
   host: 'localhost',
@@ -58,7 +58,7 @@ for (const { m, y, label } of [
   { m: 5, y: 2026, label: 'Mai 2026 Comptable' },
   { m: 7, y: 2026, label: 'Juillet 2026 (defaut page)' },
 ]) {
-  const r = await generateMonthlyBulkPayment({
+  const r = await genererPaiementsMensuelsEnMasse({
     month: m,
     year: y,
     budget: 20000,

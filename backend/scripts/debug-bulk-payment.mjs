@@ -2,8 +2,8 @@ import 'dotenv/config';
 import mysql from 'mysql2/promise';
 import { initSqliteDb } from '../src/db/sqlite.js';
 import { searchEmployees } from '../src/services/employeeService.js';
-import { generateMonthlyBulkPayment } from '../src/services/monthlyBulkPaymentService.js';
-import { getMonthBounds } from '../src/services/monthlySalaryCalculator.js';
+import { genererPaiementsMensuelsEnMasse } from '../src/services/servicePaiementsMensuelsMasse.js';
+import { bornesMois } from '../src/services/calculateurSalaireMensuel.js';
 
 await initSqliteDb();
 
@@ -50,9 +50,9 @@ const emps = await searchEmployees({ poste: 'Technicien' });
 console.log('\n=== Techniciens ===', emps.map((e) => e.lastname));
 
 for (const { year, month } of [{ year: 2024, month: 2 }, { year: 2026, month: 3 }, { year: 2026, month: 6 }]) {
-  const bounds = getMonthBounds(year, month);
+  const bounds = bornesMois(year, month);
   console.log(`\n=== Test paiement ${month}/${year} (${bounds.start} -> ${bounds.end}) ===`);
-  const result = await generateMonthlyBulkPayment({
+  const result = await genererPaiementsMensuelsEnMasse({
     month,
     year,
     budget: 20000,

@@ -6,7 +6,19 @@ const GENDER_LABELS = {
   woman: 'Femme',
 };
 
+function isSystemAdmin(user) {
+  if (normalize(user.login) === 'admin') {
+    return true;
+  }
+
+  return user.admin === 1 || user.admin === '1' || user.admin === true;
+}
+
 function isEmployee(user) {
+  if (isSystemAdmin(user)) {
+    return false;
+  }
+
   return user.employee === '1' || Boolean(user.ref_employee);
 }
 

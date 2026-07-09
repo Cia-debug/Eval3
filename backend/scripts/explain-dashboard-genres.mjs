@@ -4,9 +4,9 @@ import { initSqliteDb } from '../src/db/sqlite.js';
 import { listHolidaysInMonth } from '../src/services/holidayService.js';
 import { searchEmployees } from '../src/services/employeeService.js';
 import {
-  calculateMonthlySalaryAmount,
-  getPaidDaysInMonth,
-} from '../src/services/monthlySalaryCalculator.js';
+  calculerMontantSalaireMensuel,
+  joursPayesDuMois,
+} from '../src/services/calculateurSalaireMensuel.js';
 
 await initSqliteDb();
 
@@ -91,8 +91,8 @@ for (const emp of techniciens) {
       amount: Number(s.amount),
     }));
 
-  const paidDays = getPaidDaysInMonth(empSalaries, 2024, 2);
-  const calc = calculateMonthlySalaryAmount({
+  const paidDays = joursPayesDuMois(empSalaries, 2024, 2);
+  const calc = calculerMontantSalaireMensuel({
     year: 2024,
     month: 2,
     salaryPerDay: 10,

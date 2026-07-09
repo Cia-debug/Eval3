@@ -1,20 +1,11 @@
 import mysql from 'mysql2/promise';
+import { getMysqlConfig } from './mysqlUserFields.js';
 
 const GENDER_LABELS = {
   man: 'Homme',
   woman: 'Femme',
   unknown: 'Non renseigné',
 };
-
-function getMysqlConfig() {
-  return {
-    host: process.env.MYSQL_HOST || 'localhost',
-    port: Number(process.env.MYSQL_PORT) || 3306,
-    user: process.env.MYSQL_USER || 'root',
-    password: process.env.MYSQL_PASSWORD ?? '',
-    database: process.env.MYSQL_DATABASE || 'dolibarr',
-  };
-}
 
 function roundAmount(value) {
   return Math.round(Number(value) * 100) / 100;
