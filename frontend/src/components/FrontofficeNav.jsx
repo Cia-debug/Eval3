@@ -7,6 +7,7 @@ const links = [
   { to: '/frontoffice/salaires/generer', label: 'Génération en masse' },
   { to: '/frontoffice/salaires/generer-mois', label: 'Génération mensuelle' },
   { to: '/frontoffice/salaires/paiement-mois', label: 'Paiement en masse' },
+  { to: '/frontoffice/salaires/recap-restes', label: 'Recap restes' },
 ];
 
 function isLinkActive(pathname, link) {

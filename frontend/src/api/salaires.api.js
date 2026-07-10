@@ -34,3 +34,8 @@ export function payerSalaire(salaryId, payload) {
     body: JSON.stringify(payload),
   });
 }
+
+export function obtenirRecapRestesParMois() {
+  return apiFetch(`/api/frontoffice/salaries/monthly-remaining-recap`) 
+}
+

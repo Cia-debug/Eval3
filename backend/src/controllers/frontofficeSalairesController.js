@@ -1,6 +1,7 @@
 import { creerSalaireSeul, genererSalairesEnMasse, payerSalaire } from '../services/serviceSalaire.js';
 import { genererSalairesMensuelsEnMasse } from '../services/serviceSalairesMensuelsMasse.js';
 import { genererPaiementsMensuelsEnMasse } from '../services/servicePaiementsMensuelsMasse.js';
+import { obtenirRecapRestesParMois } from '../services/employeeSalaryHistoryService.js';
 
 function messageGenerationMensuelle(result) {
   const parts = [`${result.created} salaire(s) généré(s) sur ${result.total}`];
@@ -97,6 +98,15 @@ export async function payerSalaireEmploye(req, res) {
       ...result,
     });
   } catch (error) {
+    return res.status(502).json({ error: error.message });
+  }
+}
+
+export async function obtenirRecapRestesMensuels(req, res) {
+  try {
+    const recap = await obtenirRecapRestesParMois();
+    return res.json(recap);
+  } catch(error) {
     return res.status(502).json({ error: error.message });
   }
 }

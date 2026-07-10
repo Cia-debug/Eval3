@@ -37,11 +37,12 @@ const mars2026 = calculerMontantSalaireMensuel({
 assert('mars 2026 a des samedis bonus', mars2026.weekend_saturday_count > 0);
 assert('mars 2026 dimanche bonus desactive', mars2026.weekend_sunday_count === 0);
 assert('bonus weekend positif', mars2026.weekend_bonus_amount > 0);
+assert('week-ends non cochés exclus du total jours', mars2026.totalDaysInMonth < 31);
 
 const joursMars2026 = chaqueJourDuMois(2026, 3);
 const seulementSamedi = new Set(joursMars2026.filter((jour) => jour !== '2026-03-07'));
 
-const samediNormal = calculerMontantSalaireMensuel({
+const samediNonTravaille = calculerMontantSalaireMensuel({
   year: 2026,
   month: 3,
   salaryPerDay: 10,
@@ -50,7 +51,8 @@ const samediNormal = calculerMontantSalaireMensuel({
   workedSaturday: false,
   workedSunday: false,
 });
-assert('samedi non coché = jour normal (10)', samediNormal.amount === 10);
+assert('samedi non coché = non ouvrable (0)', samediNonTravaille.amount === 0);
+assert('samedi non coché = 0 jour à rémunérer', samediNonTravaille.unpaidDayCount === 0);
 
 const samediTriple = calculerMontantSalaireMensuel({
   year: 2026,
@@ -62,6 +64,7 @@ const samediTriple = calculerMontantSalaireMensuel({
   workedSunday: false,
 });
 assert('samedi coché = ×3 (30)', samediTriple.amount === 30);
+assert('samedi coché = 1 jour à rémunérer', samediTriple.unpaidDayCount === 1);
 
 const samediFerie = calculerMontantSalaireMensuel({
   year: 2026,
@@ -72,7 +75,8 @@ const samediFerie = calculerMontantSalaireMensuel({
   workedSaturday: true,
   workedSunday: false,
 });
-assert('samedi coché + férié = 10*3*2', samediFerie.amount === 60);
+assert('samedi coché + férié = ×3 uniquement (30)', samediFerie.amount === 30);
+assert('samedi férié ne compte pas en bonus férié', samediFerie.holidayBonusDays === 0);
 
 const seulementLundi = new Set(joursMars2026.filter((jour) => jour !== '2026-03-09'));
 const lundiFerie = calculerMontantSalaireMensuel({
@@ -85,5 +89,18 @@ const lundiFerie = calculerMontantSalaireMensuel({
   workedSunday: false,
 });
 assert('lundi férié = 10*2', lundiFerie.amount === 20);
+assert('lundi férié compte en bonus férié', lundiFerie.holidayBonusDays === 1);
+
+const moisCompletSansWeekend = calculerMontantSalaireMensuel({
+  year: 2026,
+  month: 3,
+  salaryPerDay: 10,
+  holidayDates: [],
+  paidDays: new Set(),
+  workedSaturday: false,
+  workedSunday: false,
+});
+assert('mois sans week-end = 22 jours ouvrables (lun-ven)', moisCompletSansWeekend.totalDaysInMonth === 22);
+assert('mois sans week-end = 220 €', moisCompletSansWeekend.amount === 220);
 
 console.log(`\n${passed} passed, ${failed} failed`);

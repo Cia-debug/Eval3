@@ -1,5 +1,6 @@
 import { dolibarr } from './dolibarr.js';
-import { getEmployeeById } from './employeeService.js';
+import { getEmployeeById , searchEmployees} from './employeeService.js';
+
 
 const TIMEZONE = process.env.DOLIBARR_TIMEZONE || 'Europe/Berlin';
 
@@ -87,3 +88,64 @@ export async function getEmployeeSalaryHistory(employeeId) {
     totals,
   };
 }
+
+export async function obtenirRecapRestesParMois() {
+  // const {searchEmployees} = await import ('./employeeService.js');
+  const employees = await searchEmployees({});
+  const parMois = new Map();
+
+  for(const employee of employees) {
+    const history= await getEmployeeSalaryHistory(employee.id);
+    if(!history?.salaries?.length) continue;
+ 
+  for(const salary of history.salaries) {
+    if(!salary.date_start) continue;
+  
+
+  const cleMois = salary.date_start.slice(0,7);
+  const [yearStr , monthStr]= cleMois.split('-');
+  const year = Number(yearStr);
+  const month = Number(monthStr);
+
+  if(!parMois.has(cleMois)) {
+    parMois.set(cleMois, {key: cleMois, year , month , cells:{} });
+  }
+
+  const ligne = parMois.get(cleMois);
+  if(!ligne.cells[employee.id]) {
+    ligne.cells[employee.id] = {
+      total_amount:0,
+      total_paid:0,
+      remaining:0,
+      salaries:[],
+      payments: [],
+    };
+  }
+
+  const cell= ligne.cells[employee.id];
+  cell.total_amount = roundAmount(cell.total_amount + salary.amount);
+  cell.total_paid = roundAmount(cell.total_paid + salary.paid_total);
+  cell.remaining = roundAmount(cell.remaining + salary.remaining);
+  cell.salaries.push({
+    ref:salary.ref,
+    label: salary.label,
+    amount:salary.amount,
+    date_start: salary.date_start,
+    date_end:salary.date_end,
+    paid_total: salary.paid_total,
+    remaining: salary.remaining,
+  });
+
+  salary.payments.forEach((p) => {
+    cell.payments.push({date: p.date, amount: p.amount , salary_ref: salary.ref });
+  });
+}
+}
+
+  return {
+    employees: employees.map((e) => ({ id:e.id, lastname: e.lastname })),
+    months: [...parMois.values()].sort((a,b) => a.key.localeCompare(b.key)),
+  };
+}
+
+

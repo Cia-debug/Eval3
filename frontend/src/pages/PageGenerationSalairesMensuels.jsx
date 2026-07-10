@@ -48,7 +48,7 @@ export default function PageGenerationSalairesMensuels() {
         <h2>Génération de salaires en masse</h2>
         <p className="muted bulk-salary-subtitle">
           Calcul automatique selon le mois, les jours fériés et les périodes déjà payées.
-          Les samedis et dimanches sont des jours normaux ; cochez-les pour appliquer le bonus ×3.
+          Les samedis et dimanches sont non ouvrables par défaut ; cochez-les s&apos;ils ont été travaillés (×3).
         </p>
       </header>
 
@@ -76,9 +76,9 @@ export default function PageGenerationSalairesMensuels() {
           />
 
           <p className="muted bulk-salary-hint bulk-salary-formula">
-            Formule : jours non payés × salaire/jour.
-            Jour férié : ×2 sur le montant du jour.
-            Samedi/dimanche coché : ×3 sur ce jour (×6 si ce jour est aussi férié).
+            Formule : jours ouvrables non payés × salaire/jour.
+            Jour férié (lun–ven) : ×2. Samedi/dimanche travaillé : ×3.
+            Si week-end travaillé et férié : la majoration la plus élevée s&apos;applique (×3).
           </p>
 
           <div className="bulk-salary-submit">

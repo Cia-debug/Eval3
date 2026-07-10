@@ -18,6 +18,7 @@ import PageCreationSalaire from './pages/PageCreationSalaire';
 import PageSalairesMasse from './pages/PageSalairesMasse';
 import PageGenerationSalairesMensuels from './pages/PageGenerationSalairesMensuels';
 import PagePaiementsMensuelsMasse from './pages/PagePaiementsMensuelsMasse';
+import PageRecapRestesMensuels from './pages/PageRecapRestesMensuels';
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
             <Route path="/frontoffice/salaires/generer" element={<PageSalairesMasse />} />
             <Route path="/frontoffice/salaires/generer-mois" element={<PageGenerationSalairesMensuels />} />
             <Route path="/frontoffice/salaires/paiement-mois" element={<PagePaiementsMensuelsMasse />} />
+            <Route path="/frontoffice/salaires/recap-restes" element={<PageRecapRestesMensuels />} />
           </Route>
 
           <Route element={<ProtectedBackofficeRoute />}>
