@@ -8,6 +8,10 @@ function libelleMoisAnnee(year, month) {
     return `${libelle} ${year}`;
 }
 
+function trierPaiementsParDate(payments) {
+    return [...payments].sort((a, b) => a.date.localeCompare(b.date));
+}
+
 
 export default function PageRecapRestesMensuels() {
   const [data, setData] = useState(null);
@@ -64,19 +68,18 @@ export default function PageRecapRestesMensuels() {
     <h3>{detail.employee.lastname} - {detail.period}</h3>
     <p>Total salaires: <strong>{formatMontantEuro(detail.total_amount)}</strong></p>
     <p>Total paiement: <strong>{formatMontantEuro(detail.total_paid)}</strong></p>
-    <p>Reste a payer: <strong>{formatMontantEuro(detail.remaining)}</strong></p>
-    <h4>Paiements</h4>
     {detail.payments.length ? (
-        <ul>
-            {detail.payments.map((p,i) => (
+        <ul className="muted-list" style={{ marginTop: '0.25rem', marginBottom: '1rem' }}>
+            {trierPaiementsParDate(detail.payments).map((p, i) => (
                 <li key={`${p.salary_ref}-${p.date}-${i}`}>
-                {formatDateFr(p.date)} - {formatMontantEuro(p.amount)} (ref {p.salary_ref})
+                    Le {formatDateFr(p.date)} : paiement de {formatMontantEuro(p.amount)}
                 </li>
             ))}
         </ul>
-        ) : (
-            <p className="muted">Aucun paiement.</p>
+    ) : (
+        <p className="muted" style={{ marginTop: '0.25rem' }}>Aucun paiement enregistré.</p>
     )}
+    <p>Reste a payer: <strong>{formatMontantEuro(detail.remaining)}</strong></p>
     <button type="button" onClick={() => setDetail(null)}>Fermer</button>
     </section>
 ) : null}
